@@ -1,11 +1,11 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
   name: pipelines-binding
 spec:
   params:
   - name: namespace
-    value: pipelines
+    value: $(body.namespace)
   - name: gitrevision
     value: $(body.head_commit.id)
   - name: gitrepositoryurl

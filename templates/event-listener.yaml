@@ -1,5 +1,5 @@
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
   name: github-listener-interceptor
@@ -9,7 +9,10 @@ spec:
     - name: pipelines
       interceptors:
       - cel:
-          filter: "body.repository.url.mtach('https://github.com/cloudfirst-dev/openshift-pipelines-cd.git')"
+          filter: "body.repository.url.matches('https://github.com/cloudfirst-dev/openshift-pipelines-cd')"
+          overlays:
+          - key: namespace
+            expression: "'pipelines'"
       bindings:
         - name: pipelines-binding
       template:

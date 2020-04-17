@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: helm-pipeline-template
@@ -13,6 +13,7 @@ spec:
     description: The Content-Type of the event
   - name: helm-dir
     description: The directory to the helm chart
+    default: "."
   - name: namespace
     description: The namespace to apply the chart to
   resourcetemplates:
