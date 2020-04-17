@@ -1,0 +1,29 @@
+---
+apiVersion: tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: github-listener-interceptor
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - name: pipelines
+      interceptors:
+      - cel:
+          filter: "body.repository.url.mtach('https://github.com/cloudfirst-dev/openshift-pipelines-cd.git')"
+      bindings:
+        - name: pipelines-binding
+      template:
+        name: helm-pipeline-template
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: trigger-gh
+spec:
+  to:
+    kind: Service
+    name: el-github-listener-interceptor
+    weight: 100
+  port:
+    targetPort: http-listener
+  wildcardPolicy: None

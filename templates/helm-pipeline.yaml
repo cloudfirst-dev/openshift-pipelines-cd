@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: helm-upgrade
+spec:
+  resources:
+  - name: workspace-git
+    type: git
+  params:
+  - name: helm-dir
+    type: string
+    default: "."
+  - name: namespace
+    type: string
+  tasks:
+  - name: helm-upgrade
+    taskRef:
+      name: helm-upgrade
+      kind: Task
+    resources:
+      inputs:
+      - name: workspace-git
+        resource: workspace-git
+    params:
+    - name: helm-dir
+      value: "$(params.helm-dir)"
+    - name: namespace
+      value: "$(params.namespace)"

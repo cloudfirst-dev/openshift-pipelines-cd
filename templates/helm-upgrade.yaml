@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: helm-upgrade
+spec:
+  inputs:
+    resources:
+    - name: workspace-git
+      targetPath: /
+      type: git
+    params:
+    - name: helm-dir
+      type: string
+    - name: namespace
+      type: string
+  steps:
+  - name: build
+    image: quay.io/cloudfirst/helm-ubi8
+    command:
+    - /usr/local/bin/entry-point.sh
+    args:
+    - "$(inputs.params.helm-dir)"
+    - "$(inputs.params.namespace)"
+  

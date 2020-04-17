@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: helm-pipeline-template
+spec:
+  params:
+  - name: gitrevision
+    description: The git revision
+    default: master
+  - name: gitrepositoryurl
+    description: The git repository url
+  - name: contenttype
+    description: The Content-Type of the event
+  - name: helm-dir
+    description: The directory to the helm chart
+  - name: namespace
+    description: The namespace to apply the chart to
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1alpha1
+    kind: PipelineRun
+    metadata:
+      generateName: helm-pipeline-run-
+    spec:
+      pipelineRef:
+        name: helm-upgrade
+      params:
+      - name: helm-dir
+        value: $(params.helm-dir)
+      - name: namespace
+        value: $(params.namespace)
+      resources:
+      - name: workspace-git
+        resourceSpec:
+          type: git
+          params:
+          - name: revision
+            value: $(params.gitrevision)
+          - name: url
+            value: $(params.gitrepositoryurl)
